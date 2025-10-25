@@ -3,29 +3,32 @@
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  global $koneksi;
+  if (version_compare(PHP_VERSION, '6.0.0', '<')) {
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+		$theValue = stripslashes($theValue);
+	}
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string($koneksi, $theValue) : mysqli_escape_string($koneksi, $theValue);
 
   switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+	case "text":
+	  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+	  break;    
+	case "long":
+	case "int":
+	  $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+	  break;
+	case "double":
+	  $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+	  break;
+	case "date":
+	  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+	  break;
+	case "defined":
+	  $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+	  break;
   }
   return $theValue;
 }
@@ -50,8 +53,8 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                        GetSQLValueString($_POST['keluhan'], "text"),
                        GetSQLValueString($_POST['no_hp'], "text"));
 
-  mysql_select_db($database_koneksi, $koneksi);
-  $Result1 = mysql_query($insertSQL, $koneksi) or die(mysql_error());
+  mysqli_select_db($koneksi, $database_koneksi);
+  $Result1 = mysqli_query($koneksi, $insertSQL) or die(mysqli_error($koneksi));
 
   $insertGoTo = "#";
   if (isset($_SERVER['QUERY_STRING'])) {

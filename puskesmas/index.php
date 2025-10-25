@@ -1,35 +1,34 @@
 <?php require_once('Connections/koneksi.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+function GetSQLValueString($koneksi, $theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
 {
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc()  ? stripslashes($theValue) : $theValue;
+  if (PHP_VERSION < 6 && function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
+	$theValue = stripslashes($theValue);
   }
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+  $theValue = mysqli_real_escape_string($koneksi, $theValue);
 
   switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
+	case "text":
+	  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+	  break;
+	case "int":
+	case "long":
+	  $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+	  break;
+	case "double":
+	  $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+	  break;
+	case "date":
+	  $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+	  break;
+	case "defined":
+	  $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+	  break;
   }
   return $theValue;
-}
-}
+}}
 
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
@@ -51,7 +50,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
                        GetSQLValueString($_POST['no_hp'], "text"));
 
   mysqli_select_db($koneksi, $database_koneksi);
-  $Result1 = mysqli_query($koneksi, $insertSQL) or die(mysqli_error() );
+  $Result1 = mysqli_query($koneksi, $insertSQL) or die(mysqli_error($koneksi) );
 
   $insertGoTo = "#";
   if (isset($_SERVER['QUERY_STRING'])) {

@@ -1,9 +1,21 @@
 <?php
-error_reporting(0);
+// Nonaktifkan error notice tapi tetap tampilkan error penting
+error_reporting(E_ALL & ~E_NOTICE);
+
+// Konfigurasi database
 $host = 'localhost';
 $database = 'db_puskesmas';
-$user= 'root';
+$user = 'root';
 $pass = '';
-mysql_connect($host,$user,$pass);
-mysql_select_db($database);
+
+// Koneksi ke database menggunakan mysqli
+$koneksi = mysqli_connect($host, $user, $pass, $database);
+
+// Cek koneksi
+if (!$koneksi) {
+    die("Koneksi ke database gagal: " . mysqli_connect_error());
+}
+
+// (Opsional) Set karakter UTF-8 agar tidak ada masalah huruf
+mysqli_set_charset($koneksi, "utf8");
 ?>

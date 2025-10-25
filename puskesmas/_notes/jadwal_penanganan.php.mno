@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_jadwal" value="name:id_pasien;datatype:string,name:nm_pasien;datatype:blob,name:jenkel;datatype:string,name:tmpt_lahir;datatype:string,name:tgl_lahir;datatype:date,name:alamat;datatype:string,name:nm_poli;datatype:string,name:nm_dokter;datatype:string,name:tgl_berobat;datatype:date,name:keluhan;datatype:blob,name:no_hp;datatype:string" />
+</info>

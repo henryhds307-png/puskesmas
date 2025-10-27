@@ -6,7 +6,7 @@ if(!ISSET($_POST['filter'])){
 	require 'config.php';
 	$batas_tgl ='1996-11-11';
 	$today =date('Y-m-d');
-	$query = mysqli_query($koneksi, "SELECT*FROM pasien inner join poli where pasien.kd_poli=poli.kd_poli  ORDER BY `tgl_berobat` ASC") or die(mysqli_error($koneksi));
+	$query = mysqli_query($koneksi, "SELECT*FROM pasien inner join poli where pasien.kd_poli=poli.kd_poli  ORDER BY `tgl_berobat` ASC") or die(mysqli_error());
 
 	$no=1;
 	while($fetch = mysqli_fetch_array($query)){

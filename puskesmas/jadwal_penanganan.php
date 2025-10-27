@@ -364,7 +364,7 @@ if ($jadwal && mysqli_num_rows($jadwal) > 0) {
             <td><?php echo htmlspecialchars($row_jadwal['jenkel']); ?></td>
             <td><?php echo htmlspecialchars($row_jadwal['tmpt_lahir'] . ', ' . $row_jadwal['tgl_lahir']); ?></td>
             <td><?php echo htmlspecialchars($row_jadwal['alamat']); ?></td>
-            <td><?php echo htmlspecialchars($row_jadwal['kd_poli']); ?></td>
+            <td><?php echo htmlspecialchars($row_jadwal['nm_poli']); ?></td>
 			<td><?php echo htmlspecialchars($row_jadwal['nm_dokter']); ?></td>
             <td><?php echo htmlspecialchars($row_jadwal['tgl_berobat']); ?></td>
             <td><?php echo htmlspecialchars($row_jadwal['keluhan']); ?></td>

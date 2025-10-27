@@ -1,4 +1,7 @@
 <?php
+require_once('../Connections/password_compat.php');
+require_once('../Connections/koneksi.php');
+
 // ===== Polyfill untuk PHP <5.5 =====
 
 // Tambahkan PASSWORD_BCRYPT jika belum ada

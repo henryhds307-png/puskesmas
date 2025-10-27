@@ -1,29 +1,48 @@
+<?php require_once('../Connections/koneksi.php'); ?>
 <?php
-require_once('../Connections/koneksi.php');
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
 
-// Pastikan koneksi aktif
-if (!$koneksi) {
-    die("Koneksi gagal: " . mysqli_connect_error());
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
 }
 
-// Hapus data berdasarkan kd_poli
-if (isset($_GET['kd_poli']) && $_GET['kd_poli'] != "") {
-    $kd_poli = mysqli_real_escape_string($koneksi, $_GET['kd_poli']);
+if ((isset($_GET['kd_poli'])) && ($_GET['kd_poli'] != "")) {
+  $deleteSQL = sprintf("DELETE FROM `poli` WHERE kd_poli=%s",
+                       GetSQLValueString($_GET['kd_poli'], "text"));
 
-    // Jalankan query hapus
-    $query_delete = "DELETE FROM poli WHERE kd_poli = '$kd_poli'";
-    $result = mysqli_query($koneksi, $query_delete);
+  mysql_select_db($database_koneksi, $koneksi);
+  $Result1 = mysql_query($deleteSQL, $koneksi) or die(mysql_error());
 
-    if ($result) {
-        echo "<script>
-                alert('Data Poli berhasil dihapus!');
-                document.location.href='index.php?page=data_poli';
-              </script>";
-    } else {
-        echo "<script>
-                alert('Gagal menghapus data: " . mysqli_error($koneksi) . "');
-                document.location.href='index.php?page=data_poli';
-              </script>";
-    }
+  $deleteGoTo = "index.php?page=data_poli";
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $deleteGoTo .= (strpos($deleteGoTo, '?')) ? "&" : "?";
+    $deleteGoTo .= $_SERVER['QUERY_STRING'];
+  }
+  header(sprintf("Location: %s", $deleteGoTo));
 }
 ?>

@@ -1,5 +1,7 @@
 <?php
+require_once('Connections/password_compat.php');
 require_once('Connections/koneksi.php');
+
 session_start();
 
 /* -----------------------------------------
